@@ -39,12 +39,97 @@
         #closeSidebarBtn { background: none; border: none; color: #ff4d4d; font-size: 0.85rem; font-weight: 600; cursor: pointer; }
         .form-group { display: flex; flex-direction: column; gap: 5px; }
         .form-group label { font-size: 0.85rem; font-weight: 600; color: #666; }
-        .form-group input, .form-group select { padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9rem; }
+        .form-group input, .form-group select, .form-group textarea { padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9rem; font-family: inherit; }
+        .form-group textarea { resize: vertical; } 
         #addEventBtn { background-color: #8cd3e4; color: #222; border: none; padding: 10px; border-radius: 4px; cursor: pointer; font-weight: bold; margin-top: 10px; }
 
         #calendar-container { flex-grow: 1; padding: 30px; overflow-y: auto; }
         #calendar { background-color: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); }
         .fc .fc-button-primary { background-color: #8cd3e4 !important; border-color: #8cd3e4 !important; color: #222 !important; font-weight: bold !important; }
+
+        /* MODAL POP-UP OVERLAY BOX STYLES */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5); 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999; 
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease-in-out;
+        }
+
+        .modal-overlay.modal-active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-card {
+            background-color: #ffffff;
+            width: 90%;
+            max-width: 500px;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            position: relative;
+            transform: translateY(-20px);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .modal-overlay.modal-active .modal-card {
+            transform: translateY(0);
+        }
+
+        .modal-close-x {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #aaa;
+            cursor: pointer;
+            line-height: 1;
+            transition: color 0.15s;
+        }
+
+        .modal-close-x:hover {
+            color: #333;
+        }
+
+        #modalTitle {
+            font-size: 1.4rem;
+            color: #222;
+            margin-bottom: 4px;
+            padding-right: 25px; 
+        }
+
+        /* NEW STYLE RULES FOR THE DISPLAYED MODAL DATE STRING */
+        #modalDate {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #f0f2f5;
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        #modalDescription {
+            font-size: 0.95rem;
+            color: #555;
+            line-height: 1.6;
+            white-space: pre-wrap; 
+            margin-bottom: 5px;
+        }
 
         @media (max-width: 768px) {
             header { flex-direction: column; gap: 15px; padding: 15px; }
@@ -90,6 +175,10 @@
                 <input type="text" id="eventTitle" placeholder="e.g., ASL Social Night">
             </div>
             <div class="form-group">
+                <label for="eventDescription">Description / Location Details</label>
+                <textarea id="eventDescription" placeholder="Room details, timeline goals, snack policies..." rows="4"></textarea>
+            </div>
+            <div class="form-group">
                 <label for="eventDate">Date</label>
                 <input type="date" id="eventDate">
             </div>
@@ -108,9 +197,15 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="eventModal">
+        <div class="modal-card">
+            <button class="modal-close-x" id="modalCloseBtn">&times;</button>
+            <h3 id="modalTitle">Event Title</h3>
+            <div id="modalDate">🗓️ Date text</div> <p id="modalDescription">Detailed information text goes here.</p>
+        </div>
+    </div>
+
     <script>
-        // 1. PASTE YOUR GOOGLE FIREBASE DATABASE URL HERE!
-        // Make sure it ends with a forward slash and 'events.json'
         const DATABASE_URL = "https://mac-slc-home-default-rtdb.firebaseio.com/events.json";
         const SECRET_CODE = "MacSLC2026";
         
@@ -128,21 +223,33 @@
                 },
                 editable: false,
                 
-                // 2. FETCH CURRENT GLOBAL EVENTS FROM THE CLOUD
                 events: function(info, successCallback, failureCallback) {
                     fetch(DATABASE_URL)
                     .then(response => response.json())
                     .then(data => {
                         if (!data) { successCallback([]); return; }
                         
-                        // Convert Firebase object structure into an array FullCalendar expects
                         let eventsArray = Object.keys(data).map(key => {
+                            // Extract raw start date
+                            let rawDate = data[key].start;
+                            let formattedDate = rawDate;
+
+                            // Nicely format the date string to look cleaner (e.g. October 12, 2026)
+                            if (rawDate) {
+                                const options = { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' };
+                                formattedDate = new Date(rawDate).toLocaleDateString('en-US', options);
+                            }
+
                             return {
-                                id: key, // Store the unique database ID for deletion
+                                id: key, 
                                 title: data[key].title,
-                                start: data[key].start,
+                                start: rawDate,
                                 backgroundColor: data[key].color,
-                                textColor: data[key].textColor
+                                textColor: data[key].textColor,
+                                extendedProps: {
+                                    description: data[key].description || "No description provided for this entry.",
+                                    displayDate: formattedDate // Save beautifully formatted version for the user popup
+                                }
                             };
                         });
                         successCallback(eventsArray);
@@ -150,11 +257,12 @@
                     .catch(error => failureCallback(error));
                 },
                 
-                // 3. ADMIN DELETION HANDLING
                 eventClick: function(info) {
+                    const eventDesc = info.event.extendedProps.description;
+                    const eventDateStr = info.event.extendedProps.displayDate;
+
                     if (document.getElementById('sidebar').style.display === 'flex') {
-                        if (confirm(`Delete the public event: "${info.event.title}"?`)) {
-                            // Send a DELETE request to Firebase for this specific item ID
+                        if (confirm(`Delete the public event: "${info.event.title}"?\n\nDate: ${eventDateStr}\n\nDetails: ${eventDesc}`)) {
                             let deleteUrl = DATABASE_URL.replace("events.json", `events/${info.event.id}.json`);
                             fetch(deleteUrl, { method: 'DELETE' })
                             .then(() => {
@@ -163,12 +271,29 @@
                             });
                         }
                     } else {
-                        alert('Event: ' + info.event.title);
+                        // Inject both strings cleanly into your view layer
+                        document.getElementById('modalTitle').innerText = info.event.title;
+                        document.getElementById('modalDate').innerHTML = '🗓️ ' + eventDateStr;
+                        document.getElementById('modalDescription').innerText = eventDesc;
+                        document.getElementById('eventModal').classList.add('modal-active');
                     }
                 }
             });
 
             calendar.render();
+
+            const closeBtn = document.getElementById('modalCloseBtn');
+            const modalOverlay = document.getElementById('eventModal');
+
+            closeBtn.addEventListener('click', function() {
+                modalOverlay.classList.remove('modal-active');
+            });
+
+            modalOverlay.addEventListener('click', function(e) {
+                if (e.target === modalOverlay) {
+                    modalOverlay.classList.remove('modal-active');
+                }
+            });
 
             // ADMIN SIDEBAR INTERACTION LOGIC
             document.getElementById('adminAuthBtn').addEventListener('click', function() {
@@ -185,28 +310,35 @@
                 document.getElementById('adminAuthBtn').style.display = 'block'; 
             });
 
-            // 4. PUSH NEW EVENTS DIRECTLY TO THE CLOUD
+            // SAVING PAYLOAD CONTROLLER
             document.getElementById('addEventBtn').addEventListener('click', function() {
                 var title = document.getElementById('eventTitle').value;
+                var description = document.getElementById('eventDescription').value;
                 var date = document.getElementById('eventDate').value;
                 var type = document.getElementById('eventType').value;
 
-                if (title === '' || date === '') { alert('Please fill in all fields!'); return; }
+                if (title === '' || date === '') { alert('Please fill in Title and Date fields!'); return; }
 
-                var bgColor = '#b39ddb'; var txtColor = '#222222'; // Default Event Colors
-                if (type === 'meeting') { bgColor = '#8cd3e4'; } // Meeting Color Swap
+                var bgColor = '#b39ddb'; var txtColor = '#222222'; 
+                if (type === 'meeting') { bgColor = '#8cd3e4'; } 
 
-                let newEvent = { title: title, start: date, color: bgColor, textColor: txtColor };
+                let newEvent = { 
+                    title: title, 
+                    description: description, 
+                    start: date, 
+                    color: bgColor, 
+                    textColor: txtColor 
+                };
 
-                // Send data up to the cloud database
                 fetch(DATABASE_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(newEvent)
                 })
                 .then(() => {
-                    calendar.refetchEvents(); // Force calendar to pull fresh data
+                    calendar.refetchEvents(); 
                     document.getElementById('eventTitle').value = '';
+                    document.getElementById('eventDescription').value = ''; 
                     document.getElementById('eventDate').value = '';
                 })
                 .catch(err => alert("Error saving to database: " + err));
