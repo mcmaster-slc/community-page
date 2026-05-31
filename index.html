@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>McMaster Sign Language Club - Home</title>
+    
+    <!-- Font Awesome Kit for Official Social Logos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
     <style>
         * {
             box-sizing: border-box;
@@ -20,7 +24,7 @@
             min-height: 100vh;
         }
 
-        /* NAVIGATION HEADER (Matches Calendar perfectly) */
+        /* NAVIGATION HEADER */
         header {
             background-color: #ffffff;
             display: flex;
@@ -121,6 +125,101 @@
             line-height: 1.6;
         }
 
+        /* LIVE CALENDAR PREVIEW STYLES */
+        .live-preview-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .preview-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            min-width: 280px;
+            max-width: 340px;
+            flex: 1;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            text-align: left;
+            position: relative;
+            border-top: 5px solid #ccc;
+            transition: transform 0.2s ease;
+        }
+        
+        .preview-card:hover {
+            transform: translateY(-2px);
+        }
+
+        #next-meeting-card { border-top-color: #8cd3e4; }
+        #next-event-card { border-top-color: #b39ddb; }
+
+        .preview-badge {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-meeting { background-color: #e6f6f9; color: #1a7385; }
+        .badge-event { background-color: #f1edfa; color: #5e35b1; }
+
+        .preview-card h3 {
+            font-size: 1.15rem;
+            color: #222;
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+
+        .preview-card p {
+            font-size: 0.9rem !important;
+            color: #666 !important;
+            margin: 0 !important;
+        }
+
+        /* PERMANENT MEETING LOCATION & TIME BOX */
+        .meeting-details-box {
+            background-color: rgba(255, 255, 255, 0.6);
+            border: 1px dashed #72bdcf;
+            border-radius: 8px;
+            max-width: 700px;
+            margin: 30px auto 0 auto;
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-around;
+            gap: 20px;
+            text-align: left;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.95rem;
+            color: #333;
+        }
+
+        .detail-item div {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-item strong {
+            color: #1a7385;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-icon {
+            font-size: 1.4rem;
+        }
+
         /* TWO-COLUMN CONTENT LAYOUT */
         .container {
             max-width: 1200px;
@@ -130,12 +229,6 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 40px;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                grid-template-columns: 1fr;
-            }
         }
 
         .section-title {
@@ -223,46 +316,122 @@
             line-height: 1.4;
         }
 
-        /* --- MOBILE RESPONSIVE STYLES --- */
-@media (max-width: 768px) {
-    /* Shrink header padding and stack navigation links */
-    header {
-        flex-direction: column;
-        gap: 15px;
-        padding: 15px;
-        text-align: center;
-    }
+        /* OFFICIAL BRAND ICON SOCIALS FOOTER STYLES */
+        .socials-footer {
+            background-color: #ffffff;
+            border-top: 2px solid #e0e0e0;
+            padding: 40px 20px;
+            text-align: center;
+            margin-top: auto; 
+            width: 100%;
+        }
 
-    .header-left {
-        flex-direction: column;
-        gap: 10px;
-    }
+        .socials-footer h3 {
+            font-size: 1.4rem;
+            color: #222;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
 
-    .logo-container {
-        margin-right: 0; /* Center the logo */
-    }
+        .socials-footer p {
+            font-size: 0.95rem;
+            color: #666;
+            margin-bottom: 25px;
+        }
 
-    nav {
-        margin-right: 0;
-        justify-content: center;
-    }
+        .social-icon-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
 
-    /* Shrink the large text banner so it fits on a phone screen */
-    .hero h2 {
-        font-size: 1.8rem;
-    }
-    .hero p {
-        font-size: 1rem;
-    }
+        .icon-circle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.06);
+        }
 
-    /* CRUCIAL: Force the 2-column layout to collapse into 1 vertical column */
-    .container {
-        grid-template-columns: 1fr; 
-        gap: 30px;
-        margin: 20px auto;
-    }
-}
+        /* Ensures Font Awesome vector shapes stay perfectly sized and clean white */
+        .icon-circle i {
+            font-size: 1.4rem;
+            color: #ffffff;
+        }
 
+        .icon-circle.instagram {
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+        }
+        
+        .icon-circle.discord {
+            background-color: #5865F2; /* Official Discord Blurple */
+        }
+
+        .icon-circle.email {
+            background-color: #72bdcf; /* Accent Theme Match */
+        }
+
+        .icon-circle:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 12px rgba(0,0,0,0.12);
+            filter: brightness(1.05);
+        }
+
+        .footer-credit {
+            font-size: 0.8rem !important;
+            color: #aaa !important;
+            margin-top: 10px;
+        }
+
+        /* MOBILE RESPONSIVE STYLES */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px;
+                text-align: center;
+            }
+
+            .header-left {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .logo-container {
+                margin-right: 0;
+            }
+
+            nav {
+                justify-content: center;
+            }
+
+            .hero h2 {
+                font-size: 1.8rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .container {
+                grid-template-columns: 1fr; 
+                gap: 30px;
+                margin: 20px auto;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .meeting-details-box {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -286,4 +455,158 @@
 
     <section class="hero">
         <h2>Welcome to Mac SLC</h2>
-        <p>We are a community dedicated to learning American Sign Language (ASL) 
+        <p>We are a community dedicated to learning American Sign Language (ASL).</p>
+        
+        <!-- LIVE CALENDAR PREVIEW TILES -->
+        <div class="live-preview-container">
+            <div class="preview-card" id="next-meeting-card">
+                <span class="preview-badge badge-meeting">Next Meeting</span>
+                <h3 id="meeting-title">Loading...</h3>
+                <p id="meeting-date">-</p>
+            </div>
+            <div class="preview-card" id="next-event-card">
+                <span class="preview-badge badge-event">Next Event</span>
+                <h3 id="event-title">Loading...</h3>
+                <p id="event-date">-</p>
+            </div>
+        </div>
+
+        <!-- PERMANENT LOCATION & TIME INFO BOX -->
+        <div class="meeting-details-box">
+            <div class="detail-item">
+                <span class="detail-icon">⏰</span>
+                <div>
+                    <strong>When We Meet:</strong>
+                    <span>Every Thursday from 6:00 PM – 7:00 PM</span>
+                </div>
+            </div>
+            <div class="detail-item">
+                <span class="detail-icon">📍</span>
+                <div>
+                    <strong>Where to Find Us:</strong>
+                    <span>McMaster Student Centre (MUSC), Room 212</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <!-- LEFT SIDE: UPCOMING EVENTS -->
+        <div>
+            <h2 class="section-title">Upcoming Events Highlights</h2>
+            <div class="event-list">
+                <div class="event-card">
+                    <div class="event-info">
+                        <h3>ASL Coffee Chat</h3>
+                        <p>Practice signing casual conversations over drinks!</p>
+                    </div>
+                    <div class="event-date">Oct 12</div>
+                </div>
+                <div class="event-card">
+                    <div class="event-info">
+                        <h3>Deaf Culture Movie Night</h3>
+                        <p>Screening 'Sound of Metal' followed by discussion.</p>
+                    </div>
+                    <div class="event-date">Oct 26</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT SIDE: LESSON TRACKS -->
+        <div>
+            <h2 class="section-title">Our Learning Track</h2>
+            <div class="lesson-grid">
+                <div class="lesson-card">
+                    <div class="lesson-num">01</div>
+                    <div class="lesson-details">
+                        <h3>The Alphabet & Basics</h3>
+                        <p>Master fingerspelling, core numbering syntax rules, and essential club introductions.</p>
+                    </div>
+                </div>
+                <div class="lesson-card">
+                    <div class="lesson-num">02</div>
+                    <div class="lesson-details">
+                        <h3>Family & Descriptions</h3>
+                        <p>Learn signs to talk about relatives, home dynamics, and common visual adjectives.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SOCIAL MEDIA FOOTER SECTION WITH OFFICIAL LOGOS -->
+    <footer class="socials-footer">
+        <h3>Connect With Us</h3>
+        <p>Stay updated on lessons, events, and community updates!</p>
+        <div class="social-icon-links">
+            <a href="https://www.instagram.com/mcmasterslc/" target="_blank" class="icon-circle instagram" title="Follow us on Instagram">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <!-- Swap the link below with your actual active Discord invite URL -->
+            <a href="https://discord.gg/YOUR_DISCORD_INVITE_HERE" target="_blank" class="icon-circle discord" title="Join our Discord Server">
+                <i class="fab fa-discord"></i>
+            </a>
+            <a href="mailto:mcmasterslc@gmail.com" class="icon-circle email" title="Email Us">
+                <i class="fas fa-envelope"></i>
+            </a>
+        </div>
+        <p class="footer-credit">&copy; 2026 McMaster Sign Language Club. All rights reserved.</p>
+    </footer>
+
+    <!-- LIVE CLOUD FETCHING JAVASCRIPT -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const DATABASE_URL = "https://mac-slc-home-default-rtdb.firebaseio.com/events.json";
+            
+            fetch(DATABASE_URL)
+            .then(response => response.json())
+            .then(data => {
+                if (!data) {
+                    displayNoUpcoming();
+                    return;
+                }
+
+                const todayStr = new Date().toISOString().split('T')[0];
+                let eventsArray = Object.keys(data).map(key => data[key]);
+
+                let upcomingEvents = eventsArray.filter(evt => evt.start >= todayStr);
+                upcomingEvents.sort((a, b) => a.start.localeCompare(b.start));
+
+                let nextMeeting = upcomingEvents.find(evt => evt.color === '#8cd3e4');
+                let nextEvent = upcomingEvents.find(evt => evt.color === '#b39ddb');
+
+                if (nextMeeting) {
+                    document.getElementById('meeting-title').innerText = nextMeeting.title;
+                    document.getElementById('meeting-date').innerText = formatDate(nextMeeting.start);
+                } else {
+                    document.getElementById('meeting-title').innerText = "No upcoming meetings scheduled";
+                    document.getElementById('meeting-date').innerText = "Check back soon!";
+                }
+
+                if (nextEvent) {
+                    document.getElementById('event-title').innerText = nextEvent.title;
+                    document.getElementById('event-date').innerText = formatDate(nextEvent.start);
+                } else {
+                    document.getElementById('event-title').innerText = "No upcoming special events";
+                    document.getElementById('event-date').innerText = "Check back soon!";
+                }
+            })
+            .catch(error => {
+                console.error("Error reading live preview data: ", error);
+                document.getElementById('meeting-title').innerText = "Error loading info";
+                document.getElementById('event-title').innerText = "Error loading info";
+            });
+
+            function displayNoUpcoming() {
+                document.getElementById('meeting-title').innerText = "No upcoming meetings scheduled";
+                document.getElementById('event-title').innerText = "No upcoming events scheduled";
+            }
+
+            function formatDate(dateString) {
+                const options = { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' };
+                return new Date(dateString).toLocaleDateString('en-US', options);
+            }
+        });
+    </script>
+</body>
+</html>
