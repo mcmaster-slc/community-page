@@ -220,15 +220,21 @@
             font-size: 1.4rem;
         }
 
-        /* TWO-COLUMN CONTENT LAYOUT */
+        /* TWO-COLUMN CONTENT LAYOUT FIXED FRAMEWORK */
         .container {
             max-width: 1200px;
             width: 100%;
             margin: 40px auto;
             padding: 0 20px;
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr 1fr; /* Strict side-by-side split */
             gap: 40px;
+            align-items: start; /* Prevents columns from expanding or dropping below each other */
+        }
+
+        /* Prevents content from overflowing and causing alignment shifts */
+        .container > div {
+            min-width: 0;
         }
 
         .section-title {
@@ -240,11 +246,15 @@
             padding-left: 10px;
         }
 
-        /* UPCOMING EVENTS TIMELINE LIST */
+        /* UPCOMING EVENTS TIMELINE LIST (FIXED BOUNDS) */
         .event-list {
             display: flex;
             flex-direction: column;
             gap: 15px;
+            max-height: 380px; 
+            overflow-y: auto;  
+            overflow-x: hidden; /* Stops horizontal card layout breaking */
+            padding-right: 12px; 
         }
 
         .event-card {
@@ -280,11 +290,15 @@
             min-width: 90px;
         }
 
-        /* LESSON MODULES TRACK */
+        /* LESSON MODULES TRACK (FIXED BOUNDS) */
         .lesson-grid {
             display: flex;
             flex-direction: column;
             gap: 15px;
+            max-height: 380px; 
+            overflow-y: auto;  
+            overflow-x: hidden;
+            padding-right: 12px;
         }
 
         .lesson-card {
@@ -314,6 +328,29 @@
             font-size: 0.9rem;
             color: #666;
             line-height: 1.4;
+        }
+
+        /* CUSTOM SLEEK TEAL SCROLLBAR STYLING */
+        .event-list::-webkit-scrollbar,
+        .lesson-grid::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .event-list::-webkit-scrollbar-track,
+        .lesson-grid::-webkit-scrollbar-track {
+            background: #f1f4f6;
+            border-radius: 10px;
+        }
+
+        .event-list::-webkit-scrollbar-thumb,
+        .lesson-grid::-webkit-scrollbar-thumb {
+            background: #b1e2ed;
+            border-radius: 10px;
+        }
+
+        .event-list::-webkit-scrollbar-thumb:hover,
+        .lesson-grid::-webkit-scrollbar-thumb:hover {
+            background: #72bdcf;
         }
 
         /* OFFICIAL BRAND ICON SOCIALS FOOTER STYLES */
@@ -358,7 +395,6 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.06);
         }
 
-        /* Ensures Font Awesome vector shapes stay perfectly sized and clean white */
         .icon-circle i {
             font-size: 1.4rem;
             color: #ffffff;
@@ -369,11 +405,11 @@
         }
         
         .icon-circle.discord {
-            background-color: #5865F2; /* Official Discord Blurple */
+            background-color: #5865F2; 
         }
 
         .icon-circle.email {
-            background-color: #72bdcf; /* Accent Theme Match */
+            background-color: #72bdcf; 
         }
 
         .icon-circle:hover {
@@ -455,7 +491,7 @@
 
     <section class="hero">
         <h2>Welcome to Mac SLC</h2>
-        <p>We are a community dedicated to learning American Sign Language (ASL).</p>
+        <p>We are a community dedicated to learning American Sign Language (ASL). Mac SLC is a drop in club that welcomes anyone regardless of their expereince.</p>
         
         <!-- LIVE CALENDAR PREVIEW TILES -->
         <div class="live-preview-container">
@@ -477,7 +513,7 @@
                 <span class="detail-icon">⏰</span>
                 <div>
                     <strong>When We Meet:</strong>
-                    <span>Every Thursday from 6:00 PM – 7:00 PM</span>
+                    <span>Every Thursday from 6:00 PM – 7:30 PM</span>
                 </div>
             </div>
             <div class="detail-item">
@@ -491,10 +527,11 @@
     </section>
 
     <div class="container">
-        <!-- LEFT SIDE: UPCOMING EVENTS -->
+        <!-- LEFT SIDE: UPCOMING EVENTS HIGHLIGHTS -->
         <div>
-            <h2 class="section-title">Upcoming Events Highlights</h2>
+            <h2 class="section-title">Upcoming Events</h2>
             <div class="event-list">
+                <!-- Card 1 -->
                 <div class="event-card">
                     <div class="event-info">
                         <h3>ASL Coffee Chat</h3>
@@ -502,12 +539,29 @@
                     </div>
                     <div class="event-date">Oct 12</div>
                 </div>
+                <!-- Card 2 -->
                 <div class="event-card">
                     <div class="event-info">
                         <h3>Deaf Culture Movie Night</h3>
                         <p>Screening 'Sound of Metal' followed by discussion.</p>
                     </div>
                     <div class="event-date">Oct 26</div>
+                </div>
+                <!-- Card 3 -->
+                <div class="event-card">
+                    <div class="event-info">
+                        <h3>ASL Board Games Night</h3>
+                        <p>Play classic games completely silently using your signing skills!</p>
+                    </div>
+                    <div class="event-date">Nov 09</div>
+                </div>
+                <!-- Card 4 -->
+                <div class="event-card">
+                    <div class="event-info">
+                        <h3>Guest Speaker Seminar</h3>
+                        <p>Hearing from a local advocate about accessibility on campuses.</p>
+                    </div>
+                    <div class="event-date">Nov 23</div>
                 </div>
             </div>
         </div>
@@ -516,6 +570,7 @@
         <div>
             <h2 class="section-title">Our Learning Track</h2>
             <div class="lesson-grid">
+                <!-- Module 1 -->
                 <div class="lesson-card">
                     <div class="lesson-num">01</div>
                     <div class="lesson-details">
@@ -523,11 +578,28 @@
                         <p>Master fingerspelling, core numbering syntax rules, and essential club introductions.</p>
                     </div>
                 </div>
+                <!-- Module 2 -->
                 <div class="lesson-card">
                     <div class="lesson-num">02</div>
                     <div class="lesson-details">
                         <h3>Family & Descriptions</h3>
                         <p>Learn signs to talk about relatives, home dynamics, and common visual adjectives.</p>
+                    </div>
+                </div>
+                <!-- Module 3 -->
+                <div class="lesson-card">
+                    <div class="lesson-num">03</div>
+                    <div class="lesson-details">
+                        <h3>Food & Socializing</h3>
+                        <p>Learn how to order food, express preferences, and talk about your favorite hobbies.</p>
+                    </div>
+                </div>
+                <!-- Module 4 -->
+                <div class="lesson-card">
+                    <div class="lesson-num">04</div>
+                    <div class="lesson-details">
+                        <h3>Directions & Places</h3>
+                        <p>Navigate spatial geography, give directions, and sign about travel destinations.</p>
                     </div>
                 </div>
             </div>
@@ -543,7 +615,7 @@
                 <i class="fab fa-instagram"></i>
             </a>
             <!-- Swap the link below with your actual active Discord invite URL -->
-            <a href="https://discord.gg/YOUR_DISCORD_INVITE_HERE" target="_blank" class="icon-circle discord" title="Join our Discord Server">
+            <a href="https://discord.com/invite/hq49zG6kwj" target="_blank" class="icon-circle discord" title="Join our Discord Server">
                 <i class="fab fa-discord"></i>
             </a>
             <a href="mailto:mcmasterslc@gmail.com" class="icon-circle email" title="Email Us">
