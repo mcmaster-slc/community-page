@@ -222,6 +222,49 @@
             color: #666;
             line-height: 1.4;
         }
+
+        /* --- MOBILE RESPONSIVE STYLES --- */
+@media (max-width: 768px) {
+    /* Shrink header padding and stack navigation links */
+    header {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+        text-align: center;
+    }
+
+    .header-left {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .logo-container {
+        margin-right: 0; /* Center the logo */
+    }
+
+    nav {
+        margin-right: 0;
+        justify-content: center;
+    }
+
+    /* Shrink the large text banner so it fits on a phone screen */
+    .hero h2 {
+        font-size: 1.8rem;
+    }
+    .hero p {
+        font-size: 1rem;
+    }
+
+    /* CRUCIAL: Force the 2-column layout to collapse into 1 vertical column */
+    .container {
+        grid-template-columns: 1fr; 
+        gap: 30px;
+        margin: 20px auto;
+    }
+}
+
+
+
     </style>
 </head>
 <body>

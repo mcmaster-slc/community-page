@@ -231,6 +231,70 @@
             background-color: #72bdcf !important;
             border-color: #72bdcf !important;
         }
+
+        /* --- MOBILE RESPONSIVE STYLES --- */
+@media (max-width: 768px) {
+    /* Stack the header layout vertically */
+    header {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+    }
+
+    .header-right-controls {
+        flex-direction: column;
+        width: 100%;
+        gap: 15px;
+    }
+
+    nav {
+        margin-right: 0;
+        justify-content: center;
+    }
+
+    #adminAuthBtn {
+        width: 100%; /* Make login button easy to tap */
+        padding: 12px;
+    }
+
+    /* Adjust the main page layout structural wrapper */
+    .main-content {
+        flex-direction: column;
+        height: auto; /* Let the content dictate page height */
+    }
+
+    /* Make the editing sidebar take up full width on mobile if opened */
+    #sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    /* Reduce calendar outer padding so it maximizes phone screen real estate */
+    #calendar-container {
+        padding: 10px;
+    }
+
+    #calendar {
+        padding: 10px;
+    }
+
+    /* Shrink FullCalendar structural buttons and titles so they don't overlap */
+    .fc .fc-toolbar {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .fc .fc-toolbar-title {
+        font-size: 1.2rem !important;
+    }
+
+    .fc .fc-button {
+        padding: 6px 10px !important;
+        font-size: 0.85rem !important;
+    }
+}
+
     </style>
 </head>
 <body>
